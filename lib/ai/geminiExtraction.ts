@@ -41,7 +41,11 @@ export interface GeminiExtractionResult {
   model: string;
 }
 
-const GEMINI_MODEL = "gemini-2.5-flash";
+// "latest" aliases track whatever Google currently recommends for new
+// accounts — pinned version numbers (e.g. "gemini-2.5-flash") get
+// deprecated for new API keys over time; verified against the live API
+// before shipping this (see commit history / chat log for the curl check).
+const GEMINI_MODEL = "gemini-flash-lite-latest";
 
 const RESPONSE_SCHEMA = {
   type: Type.OBJECT,

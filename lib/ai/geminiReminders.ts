@@ -16,7 +16,9 @@ export interface ReminderContext {
   languagePreference?: "english" | "hindi" | "kannada";
 }
 
-const GEMINI_MODEL = "gemini-2.5-flash";
+// See the matching comment in geminiExtraction.ts — "latest" aliases avoid
+// hardcoding a version number that gets deprecated for new API keys.
+const GEMINI_MODEL = "gemini-flash-lite-latest";
 
 export async function draftReminderMessage(ctx: ReminderContext): Promise<string> {
   const ai = new GoogleGenAI({ apiKey: geminiApiKey() });
