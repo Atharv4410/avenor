@@ -26,7 +26,10 @@ export default function Sidebar({ mobile = false }: { mobile?: boolean }) {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white">
             <Receipt size={16} />
           </div>
-          <span className="text-lg font-semibold tracking-tight text-ink">HisaabAI</span>
+          <div className="leading-tight">
+            <span className="block text-lg font-semibold tracking-tight text-ink">Avenor</span>
+            <span className="block text-[10px] text-ink-faint">Know your numbers. Move your business.</span>
+          </div>
         </div>
         {mobile && (
           <button

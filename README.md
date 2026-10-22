@@ -1,4 +1,6 @@
-# HisaabAI
+# Avenor
+
+**Know your numbers. Move your business.**
 
 AI-powered bookkeeping and payment follow-up assistant for small wholesale
 businesses in Bengaluru, India — turns a photographed handwritten ledger page

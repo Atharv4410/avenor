@@ -56,7 +56,7 @@ export default function SignupPage() {
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white">
             <Receipt size={18} />
           </div>
-          <span className="text-xl font-semibold text-ink">HisaabAI</span>
+          <span className="text-xl font-semibold text-ink">Avenor</span>
         </div>
         <h1 className="mt-6 text-lg font-semibold text-ink">Create your account</h1>
         <p className="text-sm text-ink-muted">You&apos;ll set up your business next.</p>

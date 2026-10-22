@@ -33,7 +33,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-paper px-4">
         <div className="card max-w-sm p-6 text-center">
-          <p className="text-sm font-medium text-danger-600">Couldn&apos;t load HisaabAI</p>
+          <p className="text-sm font-medium text-danger-600">Couldn&apos;t load Avenor</p>
           <p className="mt-1 text-sm text-ink-muted">{error}</p>
         </div>
       </div>
@@ -47,7 +47,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600 text-white">
             <Receipt size={18} />
           </div>
-          <p className="text-sm text-ink-muted">Loading HisaabAI…</p>
+          <p className="text-sm text-ink-muted">Loading Avenor…</p>
         </div>
       </div>
     );

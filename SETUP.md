@@ -1,4 +1,4 @@
-# HisaabAI — Setup Guide
+# Avenor — Setup Guide
 
 ## 1. Supabase (required — the app will not run without this)
 

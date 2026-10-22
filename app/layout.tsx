@@ -3,7 +3,7 @@ import "./globals.css";
 import ToastProvider from "@/components/ui/Toast";
 
 export const metadata: Metadata = {
-  title: "HisaabAI — Ledger & Payment Follow-ups",
+  title: "Avenor — Know your numbers. Move your business.",
   description:
     "AI-powered bookkeeping and payment follow-up assistant for small Indian wholesale businesses.",
 };
