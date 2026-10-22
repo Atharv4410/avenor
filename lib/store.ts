@@ -11,7 +11,7 @@ interface AppState {
   reminders: ReminderDto[];
   activity: ActivityDto[];
   business: { id: string; name: string; city: string } | null;
-  configStatus: { claudeExtraction: boolean; claudeReminders: boolean; whatsApp: boolean } | null;
+  configStatus: { aiExtraction: boolean; aiReminders: boolean; whatsApp: boolean } | null;
 
   loadAll: () => Promise<void>;
   refreshCustomers: () => Promise<void>;

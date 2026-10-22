@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { requireAuthedBusiness, handleApiError, ApiError } from "@/lib/server/apiHelpers";
-import { isAnthropicConfigured } from "@/lib/env";
-import { extractLedgerRowsFromImage } from "@/lib/ai/claudeExtraction";
+import { isGeminiConfigured } from "@/lib/env";
+import { extractLedgerRowsFromImage } from "@/lib/ai/geminiExtraction";
 import { matchCustomerName } from "@/lib/server/customerMatching";
 
 const schema = z.object({ ledgerDocumentId: z.string().uuid() });
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
       .single();
     if (docError || !document) throw new ApiError(404, "Ledger document not found.");
 
-    if (!isAnthropicConfigured()) {
+    if (!isGeminiConfigured()) {
       return NextResponse.json({
         configured: false,
         message:

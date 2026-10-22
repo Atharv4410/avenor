@@ -1,16 +1,16 @@
 import "server-only";
-import { isAnthropicConfigured } from "@/lib/env";
-import { draftReminderMessage, type ReminderContext } from "./claudeReminders";
+import { isGeminiConfigured } from "@/lib/env";
+import { draftReminderMessage, type ReminderContext } from "./geminiReminders";
 import { formatPaiseAsINR } from "@/lib/accounting/money";
 
 export interface DraftResult {
   message: string;
   /** Surfaced to the UI so it never claims a template fallback is "AI
    * generated" — see the brief's instruction not to fabricate AI involvement. */
-  source: "claude" | "template_fallback";
+  source: "gemini" | "template_fallback";
 }
 
-/** Deterministic, non-AI fallback used only when ANTHROPIC_API_KEY is not
+/** Deterministic, non-AI fallback used only when GEMINI_API_KEY is not
  * configured, so the reminder workflow stays usable in local dev without
  * credentials. Never presented to the owner as AI-generated. */
 function templateFallback(ctx: ReminderContext): string {
@@ -25,18 +25,18 @@ function templateFallback(ctx: ReminderContext): string {
 }
 
 export async function draftReminder(ctx: ReminderContext): Promise<DraftResult> {
-  if (!isAnthropicConfigured()) {
+  if (!isGeminiConfigured()) {
     return { message: templateFallback(ctx), source: "template_fallback" };
   }
 
   try {
     const message = await draftReminderMessage(ctx);
-    return { message, source: "claude" };
+    return { message, source: "gemini" };
   } catch (err) {
-    // Claude is configured but failed (rate limit, bad response, etc.) — fall
+    // Gemini is configured but failed (rate limit, bad response, etc.) — fall
     // back rather than blocking the owner's workflow, but the caller should
     // still surface that this particular draft isn't AI-generated.
-    console.error("Claude reminder drafting failed, using template fallback:", err);
+    console.error("Gemini reminder drafting failed, using template fallback:", err);
     return { message: templateFallback(ctx), source: "template_fallback" };
   }
 }

@@ -139,7 +139,7 @@ export async function draftReminderForCustomer(
     business_id: businessId,
     actor_user_id: userId,
     event_type: "reminder_drafted",
-    description: `Drafted a reminder for ${customer.shop_name} (${source === "claude" ? "AI-generated" : "template"}).`,
+    description: `Drafted a reminder for ${customer.shop_name} (${source === "gemini" ? "AI-generated" : "template"}).`,
   });
 
   return { reminder, source };

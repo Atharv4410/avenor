@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { isAnthropicConfigured } from "@/lib/env";
+import { isGeminiConfigured } from "@/lib/env";
 import { isWhatsAppConfigured } from "@/lib/whatsapp";
 
 /**
@@ -9,8 +9,8 @@ import { isWhatsAppConfigured } from "@/lib/whatsapp";
  */
 export async function GET() {
   return NextResponse.json({
-    claudeExtraction: isAnthropicConfigured(),
-    claudeReminders: isAnthropicConfigured(),
+    aiExtraction: isGeminiConfigured(),
+    aiReminders: isGeminiConfigured(),
     whatsApp: isWhatsAppConfigured(),
   });
 }

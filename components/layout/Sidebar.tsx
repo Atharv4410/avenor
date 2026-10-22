@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { LayoutDashboard, Users, BookText, BellRing, Upload, Receipt, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useUIStore } from "@/lib/uiStore";
+import { useAppStore } from "@/lib/store";
 
 const NAV_ITEMS = [
   { href: "/", label: "Overview", icon: LayoutDashboard },
@@ -75,10 +76,20 @@ export default function Sidebar({ mobile = false }: { mobile?: boolean }) {
       </nav>
 
       <div className="border-t border-line px-5 py-4">
-        <p className="text-xs text-ink-faint">
-          Prototype build &middot; demo data only
-        </p>
+        <IntegrationStatusLine />
       </div>
     </div>
   );
+}
+
+function IntegrationStatusLine() {
+  const configStatus = useAppStore((s) => s.configStatus);
+  if (!configStatus) return null;
+
+  const parts = [
+    configStatus.aiExtraction ? "AI extraction: live" : "AI extraction: manual entry",
+    configStatus.whatsApp ? "WhatsApp: live" : "WhatsApp: demo mode",
+  ];
+
+  return <p className="text-xs text-ink-faint">{parts.join(" · ")}</p>;
 }

@@ -41,14 +41,19 @@ testing against a live Supabase project; see the final report for exactly
 what that local testing covered and what it couldn't (real PostgREST/GoTrue
 behavior, real Storage API, real HTTP auth).
 
-## 2. Anthropic Claude (optional — ledger extraction & AI reminder drafting)
+## 2. Google Gemini (optional — ledger extraction & AI reminder drafting)
 
-1. Get an API key at https://console.anthropic.com/.
-2. Set `ANTHROPIC_API_KEY`.
-3. Without it: uploading a ledger photo still works (it's stored), but
+1. Get a free-tier API key at https://aistudio.google.com/apikey.
+2. Set `GEMINI_API_KEY`.
+3. **Know the tradeoff first**: Gemini's free tier lets Google use your
+   prompts/responses (here: photographed ledger pages with real customer
+   names and amounts) to improve their products. The paid tier doesn't. The
+   app works identically either way — this is a decision about where your
+   business data goes, not a configuration detail.
+4. Without it: uploading a ledger photo still works (it's stored), but
    extraction returns "not configured" and the owner enters transactions
    manually instead — the UI says so explicitly. Reminder drafting falls
-   back to a deterministic template instead of calling Claude, and the
+   back to a deterministic template instead of calling Gemini, and the
    drafted reminder is never presented as AI-generated in that case.
 
 ## 3. Meta WhatsApp Business Platform Cloud API (optional — real sending)
@@ -120,7 +125,7 @@ live Supabase project to exercise (RLS over real HTTP, Storage, real auth).
    repo) and import it in Vercel.
 2. Add every variable from `.env.example` in Vercel's Project Settings →
    Environment Variables, for Production (and Preview/Development as
-   needed) — use **separate Supabase projects and separate WhatsApp/Claude
+   needed) — use **separate Supabase projects and separate WhatsApp/Gemini
    credentials for production vs. any preview/staging environment** so a
    bug in a preview deploy can never touch real customer data or send real
    messages.
@@ -132,7 +137,7 @@ live Supabase project to exercise (RLS over real HTTP, Storage, real auth).
 
 ## 7. Health & logs
 
-- `GET /api/config-status` reports, without leaking secrets, whether Claude
+- `GET /api/config-status` reports, without leaking secrets, whether Gemini
   and WhatsApp are configured — use this to confirm a deployment's
   integration status at a glance.
 - Server errors are logged with `console.error` and returned to the client

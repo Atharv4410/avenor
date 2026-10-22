@@ -32,7 +32,7 @@ export function handleApiError(error: unknown) {
   if (error instanceof ApiError) {
     return NextResponse.json({ error: error.message }, { status: error.status });
   }
-  // Never leak raw Postgres/Anthropic/WhatsApp error internals (could include
+  // Never leak raw Postgres/Gemini/WhatsApp error internals (could include
   // connection strings, keys in error context, etc.) to the client.
   console.error(error);
   return NextResponse.json({ error: "Something went wrong. Please try again." }, { status: 500 });

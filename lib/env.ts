@@ -5,7 +5,7 @@
  * confusing downstream error (e.g. "fetch failed" from an empty URL).
  *
  * `isConfigured()` helpers let routes report "Not configured" explicitly
- * for optional integrations (Claude, WhatsApp) rather than crashing or,
+ * for optional integrations (Gemini, WhatsApp) rather than crashing or,
  * worse, silently pretending to work.
  */
 
@@ -20,23 +20,41 @@ function required(name: string): string {
 }
 
 export const supabaseEnv = {
+  // `NEXT_PUBLIC_*` vars must be referenced as static `process.env.X`
+  // property access, not `process.env[name]` — Next.js's webpack config
+  // inlines them into the browser bundle via static analysis at build time,
+  // and dynamic bracket access defeats that, silently resolving to
+  // `undefined` in any client component (there is no real `process.env` in
+  // the browser). These two are used from lib/supabase/client.ts, which runs
+  // in the browser, so they must stay written out like this.
   get url() {
-    return required("NEXT_PUBLIC_SUPABASE_URL");
+    const value = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    if (!value) {
+      throw new Error("Missing required environment variable: NEXT_PUBLIC_SUPABASE_URL. See .env.example.");
+    }
+    return value;
   },
   get anonKey() {
-    return required("NEXT_PUBLIC_SUPABASE_ANON_KEY");
+    const value = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!value) {
+      throw new Error("Missing required environment variable: NEXT_PUBLIC_SUPABASE_ANON_KEY. See .env.example.");
+    }
+    return value;
   },
+  // Server-only — dynamic access is fine here since this is never bundled
+  // for the browser (only imported from lib/supabase/admin.ts, which is
+  // guarded by `import "server-only"`).
   get serviceRoleKey() {
     return required("SUPABASE_SERVICE_ROLE_KEY");
   },
 };
 
-export function isAnthropicConfigured(): boolean {
-  return Boolean(process.env.ANTHROPIC_API_KEY);
+export function isGeminiConfigured(): boolean {
+  return Boolean(process.env.GEMINI_API_KEY);
 }
 
-export function anthropicApiKey(): string {
-  return required("ANTHROPIC_API_KEY");
+export function geminiApiKey(): string {
+  return required("GEMINI_API_KEY");
 }
 
 export function isWhatsAppConfigured(): boolean {

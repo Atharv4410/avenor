@@ -65,7 +65,7 @@ export const api = {
   reminders: {
     list: () => request<{ reminders: ReminderDto[] }>("/api/reminders"),
     draft: (customerId: string) =>
-      request<{ reminder: ReminderDto; source: "claude" | "template_fallback" }>("/api/reminders", {
+      request<{ reminder: ReminderDto; source: "gemini" | "template_fallback" }>("/api/reminders", {
         method: "POST",
         body: JSON.stringify({ customerId }),
       }),
@@ -104,7 +104,7 @@ export const api = {
     list: () => request<{ activity: ActivityDto[] }>("/api/activity"),
   },
   configStatus: () =>
-    request<{ claudeExtraction: boolean; claudeReminders: boolean; whatsApp: boolean }>(
+    request<{ aiExtraction: boolean; aiReminders: boolean; whatsApp: boolean }>(
       "/api/config-status"
     ),
 };

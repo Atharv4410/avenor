@@ -6,13 +6,13 @@ into structured transactions, computes customer balances and overdue amounts
 deterministically, and drafts WhatsApp payment reminders for the owner to
 review and approve.
 
-**Setup instructions (Supabase, Claude, WhatsApp, deployment): see [SETUP.md](SETUP.md).**
+**Setup instructions (Supabase, Gemini, WhatsApp, deployment): see [SETUP.md](SETUP.md).**
 
 ## Stack
 
 - Next.js 14 (App Router) + TypeScript + Tailwind CSS
 - Supabase: Postgres, Auth, Storage, Row Level Security
-- Anthropic Claude (vision extraction + reminder drafting), optional
+- Google Gemini (vision extraction + reminder drafting), optional
 - Meta WhatsApp Business Platform Cloud API, optional
 - Vitest for the business-logic test suite
 
@@ -26,8 +26,8 @@ Next.js Route Handlers (app/api/**)        ← auth + business-membership check 
    │                                          (lib/server/apiHelpers.ts)
    ├─ lib/accounting/ledger.ts               ← pure, DB-agnostic FIFO accounting engine
    ├─ lib/accounting/reminderEligibility.ts  ← pure eligibility/guardrail rules
-   ├─ lib/ai/claudeExtraction.ts             ← Claude vision → structured rows
-   ├─ lib/ai/claudeReminders.ts              ← Claude text → reminder draft
+   ├─ lib/ai/geminiExtraction.ts             ← Gemini vision → structured rows
+   ├─ lib/ai/geminiReminders.ts              ← Gemini text → reminder draft
    ├─ lib/whatsapp/*                         ← provider interface (Cloud API | demo)
    ▼
 Supabase (Postgres + RLS + RPCs, Storage, Auth)
@@ -76,8 +76,8 @@ npm test
 | Auth, business isolation, RLS | Real — schema + RLS + RPCs tested against a real local Postgres instance (see final report delivered in chat for exactly what that covered) |
 | Accounting (FIFO aging, partial/overpayments, cash vs. credit) | Real, pure-function, unit-tested (`npm test`) |
 | Ledger photo upload & storage | Real (Supabase Storage, private bucket) |
-| Ledger AI extraction | Real when `ANTHROPIC_API_KEY` is set; otherwise falls back to manual entry, labelled as such |
-| Reminder AI drafting | Real when `ANTHROPIC_API_KEY` is set; otherwise a template fallback, never presented as AI-generated |
+| Ledger AI extraction | Real when `GEMINI_API_KEY` is set; otherwise falls back to manual entry, labelled as such |
+| Reminder AI drafting | Real when `GEMINI_API_KEY` is set; otherwise a template fallback, never presented as AI-generated |
 | WhatsApp sending | Real via Meta Cloud API when configured; otherwise demo mode, recorded as `provider: 'demo'` and never claimed as delivered |
 | Delivery status | Only ever reported from the verified webhook — an accepted send is never presented as "delivered" |
 

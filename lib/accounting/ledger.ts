@@ -67,7 +67,7 @@ function compareDateThenId(a: { occurredOn: string; id: string }, b: { occurredO
  * have some overdue and some not, which is how real AR aging works and is
  * more correct than treating the whole balance as one age bucket.
  *
- * This function is pure and has no knowledge of SQL, HTTP, or Claude — it is
+ * This function is pure and has no knowledge of SQL, HTTP, or Gemini — it is
  * exactly the kind of "deterministic application code" the product brief
  * requires balances to come from, independent of anything AI-generated.
  */

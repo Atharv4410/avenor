@@ -249,7 +249,7 @@ export default function UploadLedgerModal() {
     }
   }
 
-  const aiNotConfigured = configStatus && !configStatus.claudeExtraction;
+  const aiNotConfigured = configStatus && !configStatus.aiExtraction;
 
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center bg-ink/30 p-4">
