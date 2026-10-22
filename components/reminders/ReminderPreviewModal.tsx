@@ -1,16 +1,18 @@
 "use client";
 
 import { X, MessageCircle } from "lucide-react";
-import { formatINR } from "@/lib/utils";
-import type { Customer, Reminder } from "@/lib/types";
+import { formatPaiseAsINR } from "@/lib/accounting/money";
+import type { CustomerDto, ReminderDto } from "@/lib/apiClient";
 
 export default function ReminderPreviewModal({
-  reminder,
+  message,
+  amountPaise,
   customer,
   onClose,
 }: {
-  reminder: Reminder;
-  customer: Customer;
+  message: string;
+  amountPaise: number;
+  customer: CustomerDto;
   onClose: () => void;
 }) {
   return (
@@ -20,7 +22,7 @@ export default function ReminderPreviewModal({
           <div>
             <h3 className="text-sm font-semibold text-ink">Preview reminder</h3>
             <p className="text-xs text-ink-muted">
-              {customer.shopName} &middot; {formatINR(reminder.amountAtDraft)}
+              {customer.shopName} &middot; {formatPaiseAsINR(amountPaise)}
             </p>
           </div>
           <button onClick={onClose} className="text-ink-faint hover:text-ink">
@@ -33,7 +35,7 @@ export default function ReminderPreviewModal({
             <MessageCircle size={12} />
             WhatsApp preview
           </div>
-          <p className="whitespace-pre-wrap leading-relaxed">{reminder.message}</p>
+          <p className="whitespace-pre-wrap leading-relaxed">{message}</p>
         </div>
 
         <div className="mt-4 flex justify-end">

@@ -1,15 +1,17 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search, BookText } from "lucide-react";
-import type { Transaction, CustomerWithStats, TransactionType } from "@/lib/types";
-import { formatINR, formatDate, transactionTypeLabel } from "@/lib/utils";
-import { WALK_IN_CUSTOMER_ID } from "@/lib/seedData";
-import StatusBadge from "@/components/ui/StatusBadge";
+import { Search, BookText, Undo2 } from "lucide-react";
+import { api, type TransactionDto, type CustomerDto } from "@/lib/apiClient";
+import { formatPaiseAsINR } from "@/lib/accounting/money";
+import { formatDate, transactionTypeLabel } from "@/lib/utils";
 import EmptyState from "@/components/ui/EmptyState";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import { useAppStore } from "@/lib/store";
+import { useToast } from "@/components/ui/Toast";
 import { cn } from "@/lib/cn";
 
-const TYPE_FILTERS: { value: TransactionType | "all"; label: string }[] = [
+const TYPE_FILTERS: { value: TransactionDto["type"] | "all"; label: string }[] = [
   { value: "all", label: "All" },
   { value: "cash_sale", label: "Cash Sale" },
   { value: "credit_sale", label: "Credit Sale" },
@@ -18,28 +20,28 @@ const TYPE_FILTERS: { value: TransactionType | "all"; label: string }[] = [
 
 export default function LedgerTable({
   transactions,
-  customerStats,
+  customers,
 }: {
-  transactions: Transaction[];
-  customerStats: CustomerWithStats[];
+  transactions: TransactionDto[];
+  customers: CustomerDto[];
 }) {
   const [query, setQuery] = useState("");
-  const [type, setType] = useState<TransactionType | "all">("all");
+  const [type, setType] = useState<TransactionDto["type"] | "all">("all");
+  const [voidTarget, setVoidTarget] = useState<TransactionDto | null>(null);
+  const [voidReason, setVoidReason] = useState("");
+
+  const refreshTransactions = useAppStore((s) => s.refreshTransactions);
+  const refreshCustomers = useAppStore((s) => s.refreshCustomers);
+  const refreshActivity = useAppStore((s) => s.refreshActivity);
+  const toast = useToast();
 
   const customerMap = useMemo(() => {
-    const m = new Map<string, CustomerWithStats>();
-    for (const c of customerStats) m.set(c.id, c);
+    const m = new Map<string, CustomerDto>();
+    for (const c of customers) m.set(c.id, c);
     return m;
-  }, [customerStats]);
+  }, [customers]);
 
-  const nameFor = (id: string) =>
-    id === WALK_IN_CUSTOMER_ID ? "Walk-in Customer" : customerMap.get(id)?.shopName ?? "Unknown";
-
-  function rowStatus(t: Transaction) {
-    if (t.type === "cash_sale" || t.type === "payment_received") return "paid" as const;
-    const c = customerMap.get(t.customerId);
-    return c?.status ?? "pending";
-  }
+  const nameFor = (id: string) => customerMap.get(id)?.shopName ?? "Unknown";
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -48,12 +50,26 @@ export default function LedgerTable({
       .filter(
         (t) =>
           !q ||
-          nameFor(t.customerId).toLowerCase().includes(q) ||
+          nameFor(t.customer_id).toLowerCase().includes(q) ||
           t.description.toLowerCase().includes(q)
       )
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transactions, query, type, customerMap]);
+
+  async function handleVoidConfirm() {
+    if (!voidTarget || !voidReason.trim()) return;
+    try {
+      await api.transactions.void(voidTarget.id, voidReason.trim());
+      await Promise.all([refreshTransactions(), refreshCustomers(), refreshActivity()]);
+      toast.show("Transaction voided.", "success");
+    } catch (err) {
+      toast.show(err instanceof Error ? err.message : "Could not void transaction.", "error");
+    } finally {
+      setVoidTarget(null);
+      setVoidReason("");
+    }
+  }
 
   return (
     <div className="card p-5">
@@ -91,7 +107,7 @@ export default function LedgerTable({
         </div>
       ) : (
         <div className="mt-4 overflow-x-auto">
-          <table className="w-full min-w-[680px] text-sm">
+          <table className="w-full min-w-[720px] text-sm">
             <thead className="text-left text-xs uppercase tracking-wide text-ink-faint">
               <tr>
                 <th className="py-2 pr-3">Date</th>
@@ -99,21 +115,36 @@ export default function LedgerTable({
                 <th className="py-2 pr-3">Description</th>
                 <th className="py-2 pr-3">Type</th>
                 <th className="py-2 pr-3 text-right">Amount</th>
-                <th className="py-2 pr-3">Status</th>
+                <th className="py-2 pr-3" />
               </tr>
             </thead>
             <tbody className="divide-y divide-line">
               {filtered.map((t) => (
-                <tr key={t.id}>
-                  <td className="py-2.5 pr-3 text-ink-muted">{formatDate(t.date)}</td>
-                  <td className="py-2.5 pr-3 font-medium text-ink">{nameFor(t.customerId)}</td>
-                  <td className="py-2.5 pr-3 text-ink-muted">{t.description}</td>
+                <tr key={t.id} className={t.voided_at ? "opacity-50" : undefined}>
+                  <td className="py-2.5 pr-3 text-ink-muted">{formatDate(t.occurred_on)}</td>
+                  <td className="py-2.5 pr-3 font-medium text-ink">{nameFor(t.customer_id)}</td>
+                  <td className="py-2.5 pr-3 text-ink-muted">
+                    {t.description}
+                    {t.voided_at && (
+                      <span className="ml-2 rounded-full bg-danger-50 px-2 py-0.5 text-[11px] font-medium text-danger-600">
+                        Voided: {t.void_reason}
+                      </span>
+                    )}
+                  </td>
                   <td className="py-2.5 pr-3 text-ink-muted">{transactionTypeLabel(t.type)}</td>
                   <td className="py-2.5 pr-3 text-right font-medium text-ink">
-                    {formatINR(t.amount)}
+                    {formatPaiseAsINR(t.amount_paise)}
                   </td>
-                  <td className="py-2.5 pr-3">
-                    <StatusBadge status={rowStatus(t)} />
+                  <td className="py-2.5 pr-3 text-right">
+                    {!t.voided_at && (
+                      <button
+                        onClick={() => setVoidTarget(t)}
+                        className="btn-ghost !px-2 !py-1 text-xs text-danger-600"
+                        title="Void this transaction"
+                      >
+                        <Undo2 size={13} />
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -121,6 +152,33 @@ export default function LedgerTable({
           </table>
         </div>
       )}
+
+      <ConfirmDialog
+        open={voidTarget !== null}
+        title="Void this transaction?"
+        tone="danger"
+        description={
+          <div className="space-y-2">
+            <p>
+              This keeps the original entry for audit purposes but removes it from balance
+              calculations. This cannot be undone.
+            </p>
+            <input
+              autoFocus
+              className="input"
+              placeholder="Reason (required)"
+              value={voidReason}
+              onChange={(e) => setVoidReason(e.target.value)}
+            />
+          </div>
+        }
+        confirmLabel="Void transaction"
+        onConfirm={handleVoidConfirm}
+        onCancel={() => {
+          setVoidTarget(null);
+          setVoidReason("");
+        }}
+      />
     </div>
   );
 }

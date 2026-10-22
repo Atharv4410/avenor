@@ -1,19 +1,19 @@
 "use client";
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
-import { formatINR } from "@/lib/utils";
+import { formatPaiseAsINR } from "@/lib/accounting/money";
 
 export default function CashCreditChart({
-  cash,
-  credit,
+  cashPaise,
+  creditPaise,
 }: {
-  cash: number;
-  credit: number;
+  cashPaise: number;
+  creditPaise: number;
 }) {
-  const total = cash + credit;
+  const total = cashPaise + creditPaise;
   const data = [
-    { name: "Cash sales", value: cash, color: "#3E8240" },
-    { name: "Credit sales (Udhaar)", value: credit, color: "#C98A1F" },
+    { name: "Cash sales", value: cashPaise, color: "#3E8240" },
+    { name: "Credit sales (Udhaar)", value: creditPaise, color: "#C98A1F" },
   ];
 
   return (
@@ -34,7 +34,7 @@ export default function CashCreditChart({
               ))}
             </Pie>
             <Tooltip
-              formatter={(value: number) => formatINR(value)}
+              formatter={(value: number) => formatPaiseAsINR(value)}
               contentStyle={{
                 borderRadius: 8,
                 border: "1px solid #E6E2D8",
@@ -55,7 +55,7 @@ export default function CashCreditChart({
               <span className="text-sm text-ink-muted">{d.name}</span>
             </div>
             <div className="text-right">
-              <p className="text-sm font-semibold text-ink">{formatINR(d.value)}</p>
+              <p className="text-sm font-semibold text-ink">{formatPaiseAsINR(d.value)}</p>
               <p className="text-xs text-ink-faint">
                 {total > 0 ? Math.round((d.value / total) * 100) : 0}%
               </p>

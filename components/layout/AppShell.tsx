@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Receipt } from "lucide-react";
 import Sidebar from "./Sidebar";
 import { useAppStore } from "@/lib/store";
@@ -9,15 +10,35 @@ import UploadLedgerModal from "@/components/ledger/UploadLedgerModal";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
-  const ensureSeeded = useAppStore((s) => s.ensureSeeded);
+  const [error, setError] = useState<string | null>(null);
+  const loadAll = useAppStore((s) => s.loadAll);
   const isMobileNavOpen = useUIStore((s) => s.isMobileNavOpen);
   const setMobileNavOpen = useUIStore((s) => s.setMobileNavOpen);
+  const router = useRouter();
 
   useEffect(() => {
-    ensureSeeded();
-    setMounted(true);
+    loadAll()
+      .then(() => setMounted(true))
+      .catch((err: Error) => {
+        if (err.message.includes("No business set up yet")) {
+          router.replace("/onboarding");
+          return;
+        }
+        setError(err.message);
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (error) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-paper px-4">
+        <div className="card max-w-sm p-6 text-center">
+          <p className="text-sm font-medium text-danger-600">Couldn&apos;t load HisaabAI</p>
+          <p className="mt-1 text-sm text-ink-muted">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!mounted) {
     return (

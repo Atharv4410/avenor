@@ -6,12 +6,10 @@ import Header from "@/components/layout/Header";
 import CustomerTable from "@/components/customers/CustomerTable";
 import CustomerDetailPanel from "@/components/customers/CustomerDetailPanel";
 import { useAppStore } from "@/lib/store";
-import { getAllCustomerStats } from "@/lib/utils";
 
 function CustomersContent() {
   const customers = useAppStore((s) => s.customers);
   const transactions = useAppStore((s) => s.transactions);
-  const referenceNow = useAppStore((s) => s.referenceNow);
   const searchParams = useSearchParams();
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -22,14 +20,13 @@ function CustomersContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const stats = getAllCustomerStats(customers, transactions, referenceNow);
-  const selected = stats.find((c) => c.id === selectedId) ?? null;
+  const selected = customers.find((c) => c.id === selectedId) ?? null;
 
   return (
     <>
       <Header title="Customers" subtitle={`${customers.length} customers on file`} />
       <main className="flex-1 px-4 py-6 sm:px-6">
-        <CustomerTable customers={stats} onSelect={setSelectedId} />
+        <CustomerTable customers={customers} onSelect={setSelectedId} />
       </main>
       {selected && (
         <CustomerDetailPanel

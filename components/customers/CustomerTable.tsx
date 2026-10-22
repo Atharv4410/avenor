@@ -2,8 +2,10 @@
 
 import { Search, Phone } from "lucide-react";
 import { useMemo, useState } from "react";
-import type { CustomerWithStats, CustomerStatus } from "@/lib/types";
-import { formatINR, formatDate } from "@/lib/utils";
+import type { CustomerDto } from "@/lib/apiClient";
+import type { CustomerStatus } from "@/lib/types";
+import { formatPaiseAsINR } from "@/lib/accounting/money";
+import { formatDate } from "@/lib/utils";
 import StatusBadge from "@/components/ui/StatusBadge";
 import EmptyState from "@/components/ui/EmptyState";
 import { Users } from "lucide-react";
@@ -20,7 +22,7 @@ export default function CustomerTable({
   customers,
   onSelect,
 }: {
-  customers: CustomerWithStats[];
+  customers: CustomerDto[];
   onSelect: (id: string) => void;
 }) {
   const [query, setQuery] = useState("");
@@ -37,7 +39,7 @@ export default function CustomerTable({
           c.shopName.toLowerCase().includes(q) ||
           c.phone.toLowerCase().includes(q)
       )
-      .sort((a, b) => b.outstanding - a.outstanding);
+      .sort((a, b) => b.outstandingPaise - a.outstandingPaise);
   }, [customers, query, status]);
 
   return (
@@ -100,9 +102,9 @@ export default function CustomerTable({
                       <p className="font-medium text-ink">{c.shopName}</p>
                       <p className="text-xs text-ink-muted">{c.name}</p>
                     </td>
-                    <td className="py-3 pr-3 text-ink-muted">{c.phone}</td>
+                    <td className="py-3 pr-3 text-ink-muted">{c.phone || "—"}</td>
                     <td className="py-3 pr-3 text-right font-medium text-ink">
-                      {formatINR(c.outstanding)}
+                      {formatPaiseAsINR(c.outstandingPaise)}
                     </td>
                     <td className="py-3 pr-3 text-ink-muted">
                       {c.lastTransactionDate ? formatDate(c.lastTransactionDate) : "—"}
@@ -136,9 +138,9 @@ export default function CustomerTable({
                 </div>
                 <div className="mt-2 flex items-center justify-between text-xs">
                   <span className="flex items-center gap-1 text-ink-faint">
-                    <Phone size={11} /> {c.phone}
+                    <Phone size={11} /> {c.phone || "—"}
                   </span>
-                  <span className="font-semibold text-ink">{formatINR(c.outstanding)}</span>
+                  <span className="font-semibold text-ink">{formatPaiseAsINR(c.outstandingPaise)}</span>
                 </div>
                 {c.daysOverdue > 0 && (
                   <p className="mt-1 text-xs text-danger-600">{c.daysOverdue} days overdue</p>

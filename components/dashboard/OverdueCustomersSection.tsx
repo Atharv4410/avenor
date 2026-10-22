@@ -1,14 +1,10 @@
 import Link from "next/link";
 import { AlertCircle, ArrowRight } from "lucide-react";
-import type { CustomerWithStats } from "@/lib/types";
-import { formatINR } from "@/lib/utils";
+import type { CustomerDto } from "@/lib/apiClient";
+import { formatPaiseAsINR } from "@/lib/accounting/money";
 import EmptyState from "@/components/ui/EmptyState";
 
-export default function OverdueCustomersSection({
-  customers,
-}: {
-  customers: CustomerWithStats[];
-}) {
+export default function OverdueCustomersSection({ customers }: { customers: CustomerDto[] }) {
   const top = customers.slice(0, 6);
 
   return (
@@ -45,7 +41,9 @@ export default function OverdueCustomersSection({
                 <p className="truncate text-xs text-ink-muted">{c.name}</p>
               </div>
               <div className="shrink-0 text-right">
-                <p className="text-sm font-semibold text-danger-600">{formatINR(c.outstanding)}</p>
+                <p className="text-sm font-semibold text-danger-600">
+                  {formatPaiseAsINR(c.overdueAmountPaise)}
+                </p>
                 <p className="text-xs text-ink-faint">{c.daysOverdue} days overdue</p>
               </div>
               <Link

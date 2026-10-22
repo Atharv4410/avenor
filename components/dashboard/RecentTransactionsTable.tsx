@@ -1,9 +1,9 @@
-import type { Transaction, Customer } from "@/lib/types";
-import { formatINR, formatDate, transactionTypeLabel } from "@/lib/utils";
-import { WALK_IN_CUSTOMER_ID } from "@/lib/seedData";
+import type { TransactionDto, CustomerDto } from "@/lib/apiClient";
+import { formatPaiseAsINR } from "@/lib/accounting/money";
+import { formatDate, transactionTypeLabel } from "@/lib/utils";
 import { cn } from "@/lib/cn";
 
-const TYPE_STYLES: Record<Transaction["type"], string> = {
+const TYPE_STYLES: Record<TransactionDto["type"], string> = {
   cash_sale: "bg-brand-50 text-brand-700",
   credit_sale: "bg-amber-50 text-amber-600",
   payment_received: "bg-brand-50 text-brand-700",
@@ -13,17 +13,15 @@ export default function RecentTransactionsTable({
   transactions,
   customers,
 }: {
-  transactions: Transaction[];
-  customers: Customer[];
+  transactions: TransactionDto[];
+  customers: CustomerDto[];
 }) {
   const sorted = [...transactions]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .filter((t) => !t.voided_at)
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 8);
 
-  const nameFor = (id: string) =>
-    id === WALK_IN_CUSTOMER_ID
-      ? "Walk-in Customer"
-      : customers.find((c) => c.id === id)?.shopName ?? "Unknown customer";
+  const nameFor = (id: string) => customers.find((c) => c.id === id)?.shopName ?? "Unknown customer";
 
   return (
     <div className="card p-5">
@@ -42,8 +40,8 @@ export default function RecentTransactionsTable({
           <tbody className="divide-y divide-line">
             {sorted.map((t) => (
               <tr key={t.id}>
-                <td className="py-2.5 pr-3 text-ink-muted">{formatDate(t.date)}</td>
-                <td className="py-2.5 pr-3 font-medium text-ink">{nameFor(t.customerId)}</td>
+                <td className="py-2.5 pr-3 text-ink-muted">{formatDate(t.occurred_on)}</td>
+                <td className="py-2.5 pr-3 font-medium text-ink">{nameFor(t.customer_id)}</td>
                 <td className="py-2.5 pr-3 text-ink-muted">{t.description}</td>
                 <td className="py-2.5 pr-3">
                   <span
@@ -55,9 +53,18 @@ export default function RecentTransactionsTable({
                     {transactionTypeLabel(t.type)}
                   </span>
                 </td>
-                <td className="py-2.5 text-right font-medium text-ink">{formatINR(t.amount)}</td>
+                <td className="py-2.5 text-right font-medium text-ink">
+                  {formatPaiseAsINR(t.amount_paise)}
+                </td>
               </tr>
             ))}
+            {sorted.length === 0 && (
+              <tr>
+                <td colSpan={5} className="py-6 text-center text-ink-faint">
+                  No transactions yet.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

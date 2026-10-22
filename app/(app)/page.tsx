@@ -10,17 +10,17 @@ import RecentTransactionsTable from "@/components/dashboard/RecentTransactionsTa
 import ActivityFeed from "@/components/dashboard/ActivityFeed";
 import { useAppStore } from "@/lib/store";
 import { getTodayTotals, getPortfolioTotals } from "@/lib/selectors";
-import { formatINR } from "@/lib/utils";
+import { formatPaiseAsINR } from "@/lib/accounting/money";
 
 export default function OverviewPage() {
   const customers = useAppStore((s) => s.customers);
   const transactions = useAppStore((s) => s.transactions);
   const activity = useAppStore((s) => s.activity);
   const reminders = useAppStore((s) => s.reminders);
-  const referenceNow = useAppStore((s) => s.referenceNow);
 
-  const today = getTodayTotals(transactions, referenceNow);
-  const portfolio = getPortfolioTotals(customers, transactions, referenceNow);
+  const now = new Date().toISOString();
+  const today = getTodayTotals(transactions, now);
+  const portfolio = getPortfolioTotals(customers);
   const pendingReminders = reminders.filter((r) => r.status === "draft" || r.status === "approved");
 
   return (
@@ -52,27 +52,27 @@ export default function OverviewPage() {
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
           <KpiCard
             label="Today's sales"
-            value={formatINR(today.totalSales)}
-            sub={`Cash ${formatINR(today.cashSales)} · Credit ${formatINR(today.creditSales)}`}
+            value={formatPaiseAsINR(today.totalSalesPaise)}
+            sub={`Cash ${formatPaiseAsINR(today.cashSalesPaise)} · Credit ${formatPaiseAsINR(today.creditSalesPaise)}`}
             icon={Wallet}
             tone="brand"
           />
           <KpiCard
             label="Payments received today"
-            value={formatINR(today.paymentsReceived)}
+            value={formatPaiseAsINR(today.paymentsReceivedPaise)}
             icon={HandCoins}
             tone="brand"
           />
           <KpiCard
             label="Total outstanding"
-            value={formatINR(portfolio.totalOutstanding)}
+            value={formatPaiseAsINR(portfolio.totalOutstandingPaise)}
             sub={`${portfolio.customersWithOutstanding} customers`}
             icon={Landmark}
             tone="amber"
           />
           <KpiCard
             label="Overdue outstanding"
-            value={formatINR(portfolio.overdueOutstanding)}
+            value={formatPaiseAsINR(portfolio.overdueOutstandingPaise)}
             sub={`${portfolio.overdueCustomers.length} customers overdue`}
             icon={AlertCircle}
             tone="danger"
@@ -94,7 +94,7 @@ export default function OverviewPage() {
             <div className="card p-5">
               <h2 className="text-sm font-semibold text-ink">Cash vs. credit sales today</h2>
               <div className="mt-4">
-                <CashCreditChart cash={today.cashSales} credit={today.creditSales} />
+                <CashCreditChart cashPaise={today.cashSalesPaise} creditPaise={today.creditSalesPaise} />
               </div>
             </div>
             <ActivityFeed entries={activity} />

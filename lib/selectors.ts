@@ -1,39 +1,39 @@
-import type { Customer, Transaction } from "./types";
-import { getAllCustomerStats, isSameCalendarDay } from "./utils";
+import type { CustomerDto, TransactionDto } from "./apiClient";
 
-export function getTodayTotals(transactions: Transaction[], referenceNow: string) {
-  const today = transactions.filter((t) => isSameCalendarDay(t.date, referenceNow));
-  const cashSales = today
+function isSameCalendarDay(a: string, b: string): boolean {
+  return a.slice(0, 10) === b.slice(0, 10);
+}
+
+export function getTodayTotals(transactions: TransactionDto[], referenceNow: string) {
+  const today = transactions.filter(
+    (t) => !t.voided_at && isSameCalendarDay(t.occurred_on, referenceNow)
+  );
+  const cashSalesPaise = today
     .filter((t) => t.type === "cash_sale")
-    .reduce((sum, t) => sum + t.amount, 0);
-  const creditSales = today
+    .reduce((sum, t) => sum + t.amount_paise, 0);
+  const creditSalesPaise = today
     .filter((t) => t.type === "credit_sale")
-    .reduce((sum, t) => sum + t.amount, 0);
-  const paymentsReceived = today
+    .reduce((sum, t) => sum + t.amount_paise, 0);
+  const paymentsReceivedPaise = today
     .filter((t) => t.type === "payment_received")
-    .reduce((sum, t) => sum + t.amount, 0);
+    .reduce((sum, t) => sum + t.amount_paise, 0);
   return {
-    totalSales: cashSales + creditSales,
-    cashSales,
-    creditSales,
-    paymentsReceived,
+    totalSalesPaise: cashSalesPaise + creditSalesPaise,
+    cashSalesPaise,
+    creditSalesPaise,
+    paymentsReceivedPaise,
   };
 }
 
-export function getPortfolioTotals(
-  customers: Customer[],
-  transactions: Transaction[],
-  referenceNow: string
-) {
-  const stats = getAllCustomerStats(customers, transactions, referenceNow);
-  const totalOutstanding = stats.reduce((sum, s) => sum + s.outstanding, 0);
-  const overdueOutstanding = stats
-    .filter((s) => s.status === "overdue")
-    .reduce((sum, s) => sum + s.outstanding, 0);
-  const customersWithOutstanding = stats.filter((s) => s.outstanding > 0).length;
-  const overdueCustomers = stats
-    .filter((s) => s.status === "overdue")
+export function getPortfolioTotals(customers: CustomerDto[]) {
+  const totalOutstandingPaise = customers.reduce((sum, c) => sum + c.outstandingPaise, 0);
+  const overdueOutstandingPaise = customers
+    .filter((c) => c.status === "overdue")
+    .reduce((sum, c) => sum + c.overdueAmountPaise, 0);
+  const customersWithOutstanding = customers.filter((c) => c.outstandingPaise > 0).length;
+  const overdueCustomers = customers
+    .filter((c) => c.status === "overdue")
     .sort((a, b) => b.daysOverdue - a.daysOverdue);
 
-  return { stats, totalOutstanding, overdueOutstanding, customersWithOutstanding, overdueCustomers };
+  return { totalOutstandingPaise, overdueOutstandingPaise, customersWithOutstanding, overdueCustomers };
 }

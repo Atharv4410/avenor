@@ -5,15 +5,11 @@ import Header from "@/components/layout/Header";
 import LedgerTable from "@/components/ledger/LedgerTable";
 import { useAppStore } from "@/lib/store";
 import { useUIStore } from "@/lib/uiStore";
-import { getAllCustomerStats } from "@/lib/utils";
 
 export default function LedgerPage() {
   const customers = useAppStore((s) => s.customers);
   const transactions = useAppStore((s) => s.transactions);
-  const referenceNow = useAppStore((s) => s.referenceNow);
   const openUploadModal = useUIStore((s) => s.openUploadModal);
-
-  const stats = getAllCustomerStats(customers, transactions, referenceNow);
 
   return (
     <>
@@ -25,7 +21,7 @@ export default function LedgerPage() {
             Upload Ledger
           </button>
         </div>
-        <LedgerTable transactions={transactions} customerStats={stats} />
+        <LedgerTable transactions={transactions} customers={customers} />
       </main>
     </>
   );
