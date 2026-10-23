@@ -3,6 +3,12 @@ import { NextResponse, type NextRequest } from "next/server";
 
 const PUBLIC_PATHS = ["/login", "/signup", "/auth/callback"];
 
+/** Matches "/" exactly — the public marketing landing page — never a
+ * startsWith prefix, so it doesn't accidentally cover every other route. */
+function isMarketingHome(pathname: string): boolean {
+  return pathname === "/";
+}
+
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request: { headers: request.headers } });
 
@@ -38,7 +44,9 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const isPublic = PUBLIC_PATHS.some((p) => request.nextUrl.pathname.startsWith(p));
+  const isPublic =
+    PUBLIC_PATHS.some((p) => request.nextUrl.pathname.startsWith(p)) ||
+    isMarketingHome(request.nextUrl.pathname);
   const isApiOrWebhook =
     request.nextUrl.pathname.startsWith("/api/webhooks") ||
     request.nextUrl.pathname.startsWith("/_next");
@@ -50,9 +58,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (user && (request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/signup")) {
+  if (
+    user &&
+    (request.nextUrl.pathname === "/login" ||
+      request.nextUrl.pathname === "/signup" ||
+      isMarketingHome(request.nextUrl.pathname))
+  ) {
     const url = request.nextUrl.clone();
-    url.pathname = "/";
+    url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
 

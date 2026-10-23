@@ -30,7 +30,7 @@ export default function Header({ title, subtitle }: { title: string; subtitle?: 
           <Menu size={20} />
         </button>
         <div>
-          <h1 className="text-lg font-semibold tracking-tight text-ink sm:text-xl">{title}</h1>
+          <h1 className="text-lg font-extrabold tracking-tight text-ink sm:text-xl">{title}</h1>
           {subtitle && <p className="text-xs text-ink-muted sm:text-sm">{subtitle}</p>}
         </div>
       </div>

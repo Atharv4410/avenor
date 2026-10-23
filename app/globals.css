@@ -61,10 +61,10 @@
     @apply bg-card border border-line rounded-xl shadow-card;
   }
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-accent-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-accent-700 hover:shadow disabled:opacity-50 disabled:pointer-events-none disabled:shadow-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-accent-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:-translate-y-0.5 hover:bg-accent-700 hover:shadow disabled:translate-y-0 disabled:opacity-50 disabled:pointer-events-none disabled:shadow-none;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line bg-white px-4 py-2 text-sm font-medium text-ink hover:border-ink-faint/60 hover:bg-paper disabled:opacity-50 disabled:pointer-events-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-line bg-white px-4 py-2 text-sm font-medium text-ink hover:-translate-y-0.5 hover:border-ink-faint/60 hover:bg-paper disabled:translate-y-0 disabled:opacity-50 disabled:pointer-events-none;
   }
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-ink-muted hover:bg-paper hover:text-ink disabled:opacity-50 disabled:pointer-events-none;

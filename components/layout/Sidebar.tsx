@@ -8,7 +8,7 @@ import { useUIStore } from "@/lib/uiStore";
 import { useAppStore } from "@/lib/store";
 
 const NAV_ITEMS = [
-  { href: "/", label: "Overview", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/customers", label: "Customers", icon: Users },
   { href: "/ledger", label: "Ledger", icon: BookText },
   { href: "/reminders", label: "Reminders", icon: BellRing },

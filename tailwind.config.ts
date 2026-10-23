@@ -102,6 +102,10 @@ const config: Config = {
           from: { opacity: "0", transform: "translateY(8px) scale(0.98)" },
           to: { opacity: "1", transform: "translateY(0) scale(1)" },
         },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
       },
       animation: {
         "fade-in-up": "fade-in-up 260ms cubic-bezier(0.16, 1, 0.3, 1) both",
@@ -110,6 +114,7 @@ const config: Config = {
         "slide-in-right": "slide-in-right 220ms cubic-bezier(0.16, 1, 0.3, 1) both",
         "slide-in-left": "slide-in-left 220ms cubic-bezier(0.16, 1, 0.3, 1) both",
         "toast-in": "toast-in 220ms cubic-bezier(0.16, 1, 0.3, 1) both",
+        float: "float 5s ease-in-out infinite",
       },
     },
   },

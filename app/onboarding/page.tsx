@@ -26,7 +26,7 @@ export default function OnboardingPage() {
       setError(error.message);
       return;
     }
-    router.push("/");
+    router.push("/dashboard");
     router.refresh();
   }
 

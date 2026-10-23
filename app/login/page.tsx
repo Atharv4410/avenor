@@ -25,7 +25,7 @@ function LoginForm() {
       setError(error.message);
       return;
     }
-    router.push(searchParams.get("next") || "/");
+    router.push(searchParams.get("next") || "/dashboard");
     router.refresh();
   }
 
