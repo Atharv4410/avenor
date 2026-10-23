@@ -12,7 +12,7 @@ export default function EmptyState({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-line bg-white/60 px-6 py-14 text-center">
+    <div className="flex animate-fade-in flex-col items-center justify-center rounded-xl border border-dashed border-line bg-white/60 px-6 py-14 text-center">
       <div className="rounded-full bg-paper p-3 text-ink-faint">
         <Icon size={22} />
       </div>

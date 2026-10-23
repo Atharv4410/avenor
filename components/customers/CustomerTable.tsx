@@ -62,7 +62,7 @@ export default function CustomerTable({
               className={cn(
                 "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
                 status === f.value
-                  ? "border-brand-200 bg-brand-50 text-brand-700"
+                  ? "border-accent-200 bg-accent-50 text-accent-700"
                   : "border-line bg-white text-ink-muted hover:bg-paper"
               )}
             >
@@ -96,7 +96,7 @@ export default function CustomerTable({
                   <tr
                     key={c.id}
                     onClick={() => onSelect(c.id)}
-                    className="cursor-pointer hover:bg-paper/70"
+                    className="cursor-pointer transition-colors hover:bg-paper/70"
                   >
                     <td className="py-3 pr-3">
                       <p className="font-medium text-ink">{c.shopName}</p>
@@ -127,7 +127,7 @@ export default function CustomerTable({
               <button
                 key={c.id}
                 onClick={() => onSelect(c.id)}
-                className="block w-full rounded-lg border border-line bg-white p-3 text-left"
+                className="block w-full rounded-lg border border-line bg-white p-3 text-left transition-colors hover:border-ink-faint/40 hover:bg-paper/60"
               >
                 <div className="flex items-start justify-between">
                   <div>

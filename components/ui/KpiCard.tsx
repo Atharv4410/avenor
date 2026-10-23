@@ -24,10 +24,10 @@ export default function KpiCard({
   tone?: Tone;
 }) {
   return (
-    <div className="card p-5">
+    <div className="card p-5 transition-shadow duration-200 hover:shadow-pop">
       <div className="flex items-start justify-between">
         <p className="text-sm text-ink-muted">{label}</p>
-        <div className={cn("rounded-lg p-1.5", TONE_STYLES[tone])}>
+        <div className={cn("rounded-lg p-1.5 transition-transform duration-200", TONE_STYLES[tone])}>
           <Icon size={16} />
         </div>
       </div>

@@ -25,7 +25,7 @@ function CustomersContent() {
   return (
     <>
       <Header title="Customers" subtitle={`${customers.length} customers on file`} />
-      <main className="flex-1 px-4 py-6 sm:px-6">
+      <main className="flex-1 animate-fade-in-up px-4 py-6 sm:px-6">
         <CustomerTable customers={customers} onSelect={setSelectedId} />
       </main>
       {selected && (

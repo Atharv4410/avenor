@@ -26,11 +26,11 @@ export default function OverviewPage() {
   return (
     <>
       <Header title="Overview" subtitle="Today's business at a glance" />
-      <main className="flex-1 space-y-6 px-4 py-6 sm:px-6">
+      <main className="flex-1 animate-fade-in-up space-y-6 px-4 py-6 sm:px-6">
         {pendingReminders.length > 0 && (
-          <div className="card flex flex-col gap-3 border-brand-100 bg-brand-50/60 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="card flex flex-col gap-3 border-accent-100 bg-accent-50/60 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
-              <div className="rounded-lg bg-brand-600 p-2 text-white">
+              <div className="rounded-lg bg-accent-600 p-2 text-white shadow-sm">
                 <BellRing size={16} />
               </div>
               <div>

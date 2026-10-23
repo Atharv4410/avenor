@@ -33,3 +33,8 @@ export function transactionIdempotencyKey(params: {
 export function sendAttemptIdempotencyKey(reminderId: string, nonce: string): string {
   return hashString(`send:${reminderId}:${nonce}`);
 }
+
+/** Same idea as sendAttemptIdempotencyKey, for sending a customer-reply draft. */
+export function replySendIdempotencyKey(customerReplyId: string, nonce: string): string {
+  return hashString(`reply_send:${customerReplyId}:${nonce}`);
+}

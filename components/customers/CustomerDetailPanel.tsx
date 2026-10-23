@@ -74,9 +74,9 @@ export default function CustomerDetailPanel({
   }
 
   return (
-    <div className="fixed inset-0 z-[70] flex justify-end bg-ink/30">
+    <div className="fixed inset-0 z-[70] flex justify-end bg-ink/30 animate-fade-in">
       <div className="absolute inset-0" onClick={onClose} aria-hidden />
-      <div className="relative flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-line bg-card shadow-pop">
+      <div className="relative flex h-full w-full max-w-md animate-slide-in-right flex-col overflow-y-auto border-l border-line bg-card shadow-pop">
         <div className="flex items-start justify-between border-b border-line px-6 py-5">
           <div>
             <h2 className="text-base font-semibold text-ink">{customer.shopName}</h2>
@@ -86,7 +86,7 @@ export default function CustomerDetailPanel({
               {customer.phone || "No phone on file"}
             </div>
           </div>
-          <button onClick={onClose} className="text-ink-faint hover:text-ink">
+          <button onClick={onClose} className="text-ink-faint transition-colors hover:text-ink">
             <X size={18} />
           </button>
         </div>
@@ -248,7 +248,7 @@ export default function CustomerDetailPanel({
             </ul>
           </div>
 
-          <Link href="/ledger" className="text-xs font-medium text-brand-600 hover:text-brand-700">
+          <Link href="/ledger" className="text-xs font-medium text-accent-600 hover:text-accent-700">
             View full ledger &rarr;
           </Link>
         </div>

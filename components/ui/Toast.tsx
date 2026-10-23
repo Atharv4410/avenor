@@ -59,7 +59,7 @@ export default function ToastProvider({ children }: { children: React.ReactNode 
             <div
               key={t.id}
               className={cn(
-                "card flex items-start gap-2.5 border px-4 py-3 shadow-pop",
+                "card flex animate-toast-in items-start gap-2.5 border px-4 py-3 shadow-pop",
                 COLORS[t.kind]
               )}
             >

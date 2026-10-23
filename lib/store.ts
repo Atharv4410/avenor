@@ -1,7 +1,14 @@
 "use client";
 
 import { create } from "zustand";
-import { api, type CustomerDto, type TransactionDto, type ReminderDto, type ActivityDto } from "./apiClient";
+import {
+  api,
+  type CustomerDto,
+  type TransactionDto,
+  type ReminderDto,
+  type ActivityDto,
+  type CustomerReplyDto,
+} from "./apiClient";
 
 interface AppState {
   loaded: boolean;
@@ -9,6 +16,7 @@ interface AppState {
   customers: CustomerDto[];
   transactions: TransactionDto[];
   reminders: ReminderDto[];
+  customerReplies: CustomerReplyDto[];
   activity: ActivityDto[];
   business: { id: string; name: string; city: string } | null;
   configStatus: { aiExtraction: boolean; aiReminders: boolean; whatsApp: boolean } | null;
@@ -17,6 +25,7 @@ interface AppState {
   refreshCustomers: () => Promise<void>;
   refreshTransactions: () => Promise<void>;
   refreshReminders: () => Promise<void>;
+  refreshCustomerReplies: () => Promise<void>;
   refreshActivity: () => Promise<void>;
 
   recordPayment: (
@@ -31,6 +40,11 @@ interface AppState {
   sendReminder: (id: string) => Promise<{ ok: true } | { ok: false; reason: string }>;
   approveSelected: (ids: string[]) => Promise<void>;
   sendSelected: (ids: string[]) => Promise<{ sent: number; blocked: number }>;
+
+  editCustomerReply: (id: string, message: string) => Promise<void>;
+  approveCustomerReply: (id: string) => Promise<void>;
+  skipCustomerReply: (id: string) => Promise<void>;
+  sendCustomerReply: (id: string) => Promise<{ ok: true } | { ok: false; reason: string }>;
 }
 
 export const useAppStore = create<AppState>()((set, get) => ({
@@ -39,6 +53,7 @@ export const useAppStore = create<AppState>()((set, get) => ({
   customers: [],
   transactions: [],
   reminders: [],
+  customerReplies: [],
   activity: [],
   business: null,
   configStatus: null,
@@ -46,19 +61,22 @@ export const useAppStore = create<AppState>()((set, get) => ({
   loadAll: async () => {
     set({ loading: true });
     try {
-      const [business, customers, transactions, reminders, activity, configStatus] = await Promise.all([
-        api.business.get(),
-        api.customers.list(),
-        api.transactions.list(),
-        api.reminders.list(),
-        api.activity.list(),
-        api.configStatus(),
-      ]);
+      const [business, customers, transactions, reminders, customerReplies, activity, configStatus] =
+        await Promise.all([
+          api.business.get(),
+          api.customers.list(),
+          api.transactions.list(),
+          api.reminders.list(),
+          api.customerReplies.list(),
+          api.activity.list(),
+          api.configStatus(),
+        ]);
       set({
         business: business.business,
         customers: customers.customers,
         transactions: transactions.transactions,
         reminders: reminders.reminders,
+        customerReplies: customerReplies.customerReplies,
         activity: activity.activity,
         configStatus,
         loaded: true,
@@ -81,6 +99,10 @@ export const useAppStore = create<AppState>()((set, get) => ({
   refreshReminders: async () => {
     const { reminders } = await api.reminders.list();
     set({ reminders });
+  },
+  refreshCustomerReplies: async () => {
+    const { customerReplies } = await api.customerReplies.list();
+    set({ customerReplies });
   },
   refreshActivity: async () => {
     const { activity } = await api.activity.list();
@@ -141,5 +163,31 @@ export const useAppStore = create<AppState>()((set, get) => ({
       sent: results.filter((r) => r.ok).length,
       blocked: results.filter((r) => !r.ok).length,
     };
+  },
+
+  editCustomerReply: async (id, message) => {
+    await api.customerReplies.edit(id, message);
+    await get().refreshCustomerReplies();
+  },
+
+  approveCustomerReply: async (id) => {
+    await api.customerReplies.approve(id);
+    await Promise.all([get().refreshCustomerReplies(), get().refreshActivity()]);
+  },
+
+  skipCustomerReply: async (id) => {
+    await api.customerReplies.skip(id);
+    await Promise.all([get().refreshCustomerReplies(), get().refreshActivity()]);
+  },
+
+  sendCustomerReply: async (id) => {
+    try {
+      const result = await api.customerReplies.send(id, crypto.randomUUID());
+      await Promise.all([get().refreshCustomerReplies(), get().refreshActivity()]);
+      if (!result.ok) return { ok: false, reason: result.errorDetail ?? "Could not send." };
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, reason: err instanceof Error ? err.message : "Could not send." };
+    }
   },
 }));

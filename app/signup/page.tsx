@@ -35,7 +35,7 @@ export default function SignupPage() {
   if (sent) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-paper px-4">
-        <div className="card w-full max-w-sm p-8 text-center">
+        <div className="card w-full max-w-sm animate-scale-in p-8 text-center">
           <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-brand-50 text-brand-600">
             <MailCheck size={20} />
           </div>
@@ -51,9 +51,9 @@ export default function SignupPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-paper px-4">
-      <div className="card w-full max-w-sm p-8">
+      <div className="card w-full max-w-sm animate-fade-in-up p-8">
         <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-600 text-white shadow-sm">
             <Receipt size={18} />
           </div>
           <span className="text-xl font-semibold text-ink">Avenor</span>
@@ -95,7 +95,7 @@ export default function SignupPage() {
 
         <p className="mt-5 text-center text-sm text-ink-muted">
           Already have an account?{" "}
-          <Link href="/login" className="font-medium text-brand-600 hover:text-brand-700">
+          <Link href="/login" className="font-medium text-accent-600 hover:text-accent-700">
             Sign in
           </Link>
         </p>

@@ -16,7 +16,7 @@ export default function OverdueCustomersSection({ customers }: { customers: Cust
         </div>
         <Link
           href="/reminders"
-          className="inline-flex items-center gap-1 text-xs font-medium text-brand-600 hover:text-brand-700"
+          className="inline-flex items-center gap-1 text-xs font-medium text-accent-600 hover:text-accent-700"
         >
           Review reminders
           <ArrowRight size={13} />
@@ -30,11 +30,14 @@ export default function OverdueCustomersSection({ customers }: { customers: Cust
       ) : (
         <div className="mt-4 divide-y divide-line">
           {top.map((c) => (
-            <div key={c.id} className="flex items-center justify-between gap-3 py-3">
+            <div
+              key={c.id}
+              className="-mx-2 flex items-center justify-between gap-3 rounded-lg px-2 py-3 transition-colors hover:bg-paper/60"
+            >
               <div className="min-w-0">
                 <Link
                   href={`/customers?customer=${c.id}`}
-                  className="truncate text-sm font-medium text-ink hover:text-brand-700"
+                  className="truncate text-sm font-medium text-ink hover:text-accent-700"
                 >
                   {c.shopName}
                 </Link>

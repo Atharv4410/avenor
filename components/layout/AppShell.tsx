@@ -32,7 +32,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   if (error) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-paper px-4">
-        <div className="card max-w-sm p-6 text-center">
+        <div className="card max-w-sm animate-scale-in p-6 text-center">
           <p className="text-sm font-medium text-danger-600">Couldn&apos;t load Avenor</p>
           <p className="mt-1 text-sm text-ink-muted">{error}</p>
         </div>
@@ -43,8 +43,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   if (!mounted) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-paper">
-        <div className="flex flex-col items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600 text-white">
+        <div className="flex animate-fade-in flex-col items-center gap-3">
+          <div className="flex h-10 w-10 animate-pulse items-center justify-center rounded-xl bg-accent-600 text-white shadow-sm">
             <Receipt size={18} />
           </div>
           <p className="text-sm text-ink-muted">Loading Avenor…</p>
@@ -62,10 +62,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {isMobileNavOpen && (
         <div className="fixed inset-0 z-50 flex lg:hidden">
           <div
-            className="fixed inset-0 bg-ink/30"
+            className="fixed inset-0 animate-fade-in bg-ink/30"
             onClick={() => setMobileNavOpen(false)}
           />
-          <div className="relative z-10 h-full">
+          <div className="relative z-10 h-full animate-slide-in-left">
             <Sidebar mobile />
           </div>
         </div>

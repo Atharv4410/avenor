@@ -252,8 +252,8 @@ export default function UploadLedgerModal() {
   const aiNotConfigured = configStatus && !configStatus.aiExtraction;
 
   return (
-    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-ink/30 p-4">
-      <div className="card flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden shadow-pop">
+    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-ink/30 p-4 animate-fade-in">
+      <div className="card flex max-h-[90vh] w-full max-w-3xl animate-scale-in flex-col overflow-hidden shadow-pop">
         <div className="flex items-center justify-between border-b border-line px-6 py-4">
           <div>
             <h2 className="text-base font-semibold text-ink">Upload Ledger</h2>
@@ -261,7 +261,7 @@ export default function UploadLedgerModal() {
               Photograph a ledger page or receipt, then review before saving.
             </p>
           </div>
-          <button onClick={handleClose} className="text-ink-faint hover:text-ink">
+          <button onClick={handleClose} className="text-ink-faint transition-colors hover:text-ink">
             <X size={18} />
           </button>
         </div>
@@ -278,7 +278,7 @@ export default function UploadLedgerModal() {
               )}
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="flex w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-line bg-paper/60 px-6 py-10 text-center transition-colors hover:border-brand-300 hover:bg-brand-50/40"
+                className="flex w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-line bg-paper/60 px-6 py-10 text-center transition-colors hover:border-accent-300 hover:bg-accent-50/40"
               >
                 <UploadCloud className="text-ink-faint" size={28} />
                 <p className="text-sm font-medium text-ink">Click to upload a photo</p>
@@ -340,7 +340,7 @@ export default function UploadLedgerModal() {
 
           {step === "extracting" && (
             <div className="flex flex-col items-center justify-center gap-3 py-16">
-              <Loader2 className="animate-spin text-brand-600" size={28} />
+              <Loader2 className="animate-spin text-accent-600" size={28} />
               <p className="text-sm text-ink-muted">Reading the ledger page…</p>
             </div>
           )}
@@ -462,7 +462,7 @@ export default function UploadLedgerModal() {
                         <td className="px-3 py-2">
                           <button
                             onClick={() => removeRow(r.rowId)}
-                            className="text-ink-faint hover:text-danger-600"
+                            className="text-ink-faint transition-colors hover:text-danger-600"
                             aria-label="Remove row"
                           >
                             <Trash2 size={15} />

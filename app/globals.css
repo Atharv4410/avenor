@@ -5,9 +5,54 @@
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   body {
     @apply bg-paper text-ink font-sans;
+  }
+
+  /* Consistent, visible keyboard focus everywhere, without per-component
+     styling. Mouse/touch clicks never trigger :focus-visible, so this never
+     shows as an unwanted "click ring". */
+  :focus-visible {
+    outline: 2px solid theme("colors.accent.500");
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Subtle, fast feedback on every clickable control — the one global rule
+     that gives the whole app consistent press/hover feel instead of editing
+     every button. Purely visual: no effect on click handlers or behaviour. */
+  button,
+  a,
+  [role="button"],
+  input,
+  select,
+  textarea {
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease,
+      color 150ms ease,
+      box-shadow 150ms ease,
+      transform 100ms ease;
+  }
+  button:active:not(:disabled),
+  [role="button"]:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  /* Respect the user's motion preference globally — every transition and
+     keyframe animation in the app collapses to effectively instant, rather
+     than requiring every individual animation to be special-cased. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
@@ -16,19 +61,19 @@
     @apply bg-card border border-line rounded-xl shadow-card;
   }
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-700 disabled:opacity-50 disabled:pointer-events-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-accent-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-accent-700 hover:shadow disabled:opacity-50 disabled:pointer-events-none disabled:shadow-none;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line bg-white px-4 py-2 text-sm font-medium text-ink transition-colors hover:bg-paper disabled:opacity-50 disabled:pointer-events-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line bg-white px-4 py-2 text-sm font-medium text-ink hover:border-ink-faint/60 hover:bg-paper disabled:opacity-50 disabled:pointer-events-none;
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-ink-muted transition-colors hover:bg-paper hover:text-ink disabled:opacity-50 disabled:pointer-events-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-ink-muted hover:bg-paper hover:text-ink disabled:opacity-50 disabled:pointer-events-none;
   }
   .btn-danger {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-danger-100 bg-danger-50 px-4 py-2 text-sm font-medium text-danger-600 transition-colors hover:bg-danger-100;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-danger-100 bg-danger-50 px-4 py-2 text-sm font-medium text-danger-600 hover:bg-danger-100 hover:border-danger-100;
   }
   .input {
-    @apply w-full rounded-lg border border-line bg-white px-3 py-2 text-sm text-ink placeholder:text-ink-faint focus:outline-none focus:ring-2 focus:ring-brand-400/40 focus:border-brand-400;
+    @apply w-full rounded-lg border border-line bg-white px-3 py-2 text-sm text-ink placeholder:text-ink-faint focus:outline-none focus:ring-2 focus:ring-accent-400/30 focus:border-accent-400;
   }
 }
 
@@ -37,6 +82,6 @@
   height: 8px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #d8d3c5;
+  background: #d7dbe3;
   border-radius: 8px;
 }

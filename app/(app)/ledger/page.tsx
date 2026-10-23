@@ -14,7 +14,7 @@ export default function LedgerPage() {
   return (
     <>
       <Header title="Ledger" subtitle={`${transactions.length} transactions recorded`} />
-      <main className="flex-1 space-y-4 px-4 py-6 sm:px-6">
+      <main className="flex-1 animate-fade-in-up space-y-4 px-4 py-6 sm:px-6">
         <div className="flex justify-end sm:hidden">
           <button onClick={openUploadModal} className="btn-primary">
             <Upload size={16} />

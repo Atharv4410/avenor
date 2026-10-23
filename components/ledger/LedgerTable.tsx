@@ -91,7 +91,7 @@ export default function LedgerTable({
               className={cn(
                 "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
                 type === f.value
-                  ? "border-brand-200 bg-brand-50 text-brand-700"
+                  ? "border-accent-200 bg-accent-50 text-accent-700"
                   : "border-line bg-white text-ink-muted hover:bg-paper"
               )}
             >
@@ -120,7 +120,13 @@ export default function LedgerTable({
             </thead>
             <tbody className="divide-y divide-line">
               {filtered.map((t) => (
-                <tr key={t.id} className={t.voided_at ? "opacity-50" : undefined}>
+                <tr
+                  key={t.id}
+                  className={cn(
+                    "transition-colors hover:bg-paper/60",
+                    t.voided_at && "opacity-50"
+                  )}
+                >
                   <td className="py-2.5 pr-3 text-ink-muted">{formatDate(t.occurred_on)}</td>
                   <td className="py-2.5 pr-3 font-medium text-ink">{nameFor(t.customer_id)}</td>
                   <td className="py-2.5 pr-3 text-ink-muted">

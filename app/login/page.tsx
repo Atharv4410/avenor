@@ -30,9 +30,9 @@ function LoginForm() {
   }
 
   return (
-    <div className="card w-full max-w-sm p-8">
+    <div className="card w-full max-w-sm animate-fade-in-up p-8">
       <div className="flex items-center gap-2">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-600 text-white shadow-sm">
           <Receipt size={18} />
         </div>
         <span className="text-xl font-semibold text-ink">Avenor</span>
@@ -72,7 +72,7 @@ function LoginForm() {
 
       <p className="mt-5 text-center text-sm text-ink-muted">
         New to Avenor?{" "}
-        <Link href="/signup" className="font-medium text-brand-600 hover:text-brand-700">
+        <Link href="/signup" className="font-medium text-accent-600 hover:text-accent-700">
           Create an account
         </Link>
       </p>

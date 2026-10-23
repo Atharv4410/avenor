@@ -39,7 +39,7 @@ export default function RecentTransactionsTable({
           </thead>
           <tbody className="divide-y divide-line">
             {sorted.map((t) => (
-              <tr key={t.id}>
+              <tr key={t.id} className="transition-colors hover:bg-paper/60">
                 <td className="py-2.5 pr-3 text-ink-muted">{formatDate(t.occurred_on)}</td>
                 <td className="py-2.5 pr-3 font-medium text-ink">{nameFor(t.customer_id)}</td>
                 <td className="py-2.5 pr-3 text-ink-muted">{t.description}</td>

@@ -25,8 +25,8 @@ export default function ConfirmDialog({
 }: ConfirmDialogProps) {
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-ink/30 px-4">
-      <div className="card w-full max-w-md p-6 shadow-pop">
+    <div className="fixed inset-0 z-[90] flex animate-fade-in items-center justify-center bg-ink/30 px-4">
+      <div className="card w-full max-w-md animate-scale-in p-6 shadow-pop">
         <div className="flex items-start gap-3">
           {tone === "danger" && (
             <div className="shrink-0 rounded-full bg-danger-50 p-2 text-danger-600">

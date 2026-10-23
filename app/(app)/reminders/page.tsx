@@ -2,9 +2,10 @@
 
 import { Suspense, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { CheckCheck, Send, BellRing } from "lucide-react";
+import { CheckCheck, Send, BellRing, MessageCircleMore } from "lucide-react";
 import Header from "@/components/layout/Header";
 import ReminderCard from "@/components/reminders/ReminderCard";
+import ReplyCard from "@/components/reminders/ReplyCard";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import EmptyState from "@/components/ui/EmptyState";
 import { useAppStore } from "@/lib/store";
@@ -30,6 +31,7 @@ function statusMatchesFilter(status: ReminderDto["status"], filter: Filter): boo
 
 function RemindersContent() {
   const reminders = useAppStore((s) => s.reminders);
+  const customerReplies = useAppStore((s) => s.customerReplies);
   const customers = useAppStore((s) => s.customers);
   const approveSelected = useAppStore((s) => s.approveSelected);
   const sendSelected = useAppStore((s) => s.sendSelected);
@@ -42,6 +44,10 @@ function RemindersContent() {
   const [showBulkSendConfirm, setShowBulkSendConfirm] = useState(false);
 
   const customerMap = useMemo(() => new Map(customers.map((c) => [c.id, c])), [customers]);
+
+  const visibleReplies = customerReplies
+    .filter((r) => r.status !== "skipped")
+    .sort((a, b) => new Date(b.inbound_received_at).getTime() - new Date(a.inbound_received_at).getTime());
 
   const visible = reminders
     .filter((r) => statusMatchesFilter(r.status, filter))
@@ -96,7 +102,7 @@ function RemindersContent() {
   return (
     <>
       <Header title="Reminders" subtitle="Review AI-drafted payment follow-ups before sending" />
-      <main className="flex-1 space-y-4 px-4 py-6 sm:px-6">
+      <main className="flex-1 animate-fade-in-up space-y-4 px-4 py-6 sm:px-6">
         <div className="card flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap gap-1.5">
             {FILTERS.map((f) => (
@@ -106,7 +112,7 @@ function RemindersContent() {
                 className={cn(
                   "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
                   filter === f.value
-                    ? "border-brand-200 bg-brand-50 text-brand-700"
+                    ? "border-accent-200 bg-accent-50 text-accent-700"
                     : "border-line bg-white text-ink-muted hover:bg-paper"
                 )}
               >
@@ -153,6 +159,30 @@ function RemindersContent() {
             })}
           </div>
         )}
+
+        <div>
+          <h2 className="text-sm font-semibold text-ink">Customer replies</h2>
+          <p className="text-xs text-ink-muted">
+            AI-drafted replies to incoming WhatsApp messages, waiting for your review
+          </p>
+          <div className="mt-3">
+            {visibleReplies.length === 0 ? (
+              <EmptyState
+                icon={MessageCircleMore}
+                title="No replies waiting"
+                description="Customer WhatsApp messages and their AI-drafted replies will show up here."
+              />
+            ) : (
+              <div className="space-y-4">
+                {visibleReplies.map((r) => {
+                  const c = customerMap.get(r.customer_id);
+                  if (!c) return null;
+                  return <ReplyCard key={r.id} reply={r} customer={c} />;
+                })}
+              </div>
+            )}
+          </div>
+        </div>
       </main>
 
       <ConfirmDialog

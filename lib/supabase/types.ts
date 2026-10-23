@@ -13,6 +13,8 @@ export type ReminderStatus = "draft" | "approved" | "sent" | "failed" | "skipped
 export type DeliveryStatus = "queued" | "sent" | "delivered" | "read" | "failed";
 export type DeliveryProvider = "whatsapp_cloud_api" | "demo";
 export type MemberRole = "owner" | "staff";
+export type CustomerReplyStatus = "draft" | "approved" | "sent" | "failed" | "skipped";
+export type CustomerReplyDraftedBy = "ai" | "template";
 
 export interface Database {
   public: {
@@ -186,6 +188,38 @@ export interface Database {
           description: string;
         };
         Update: never;
+      };
+      customer_replies: {
+        Row: {
+          id: string;
+          business_id: string;
+          customer_id: string;
+          inbound_message_id: string;
+          inbound_text: string;
+          inbound_received_at: string;
+          draft_reply: string;
+          drafted_by: CustomerReplyDraftedBy;
+          status: CustomerReplyStatus;
+          approved_by: string | null;
+          approved_at: string | null;
+          sent_by: string | null;
+          sent_at: string | null;
+          provider_message_id: string | null;
+          error_detail: string | null;
+          idempotency_key: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["customer_replies"]["Row"]> & {
+          business_id: string;
+          customer_id: string;
+          inbound_message_id: string;
+          inbound_text: string;
+          inbound_received_at: string;
+          draft_reply: string;
+          drafted_by: CustomerReplyDraftedBy;
+        };
+        Update: Partial<Database["public"]["Tables"]["customer_replies"]["Row"]>;
       };
       webhook_events: {
         Row: {

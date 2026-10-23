@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Copy, Eye, MessageCircleMore, Send, XCircle, CheckCircle2, Clock, Loader2 } from "lucide-react";
 import type { CustomerDto, ReminderDto } from "@/lib/apiClient";
 import { formatPaiseAsINR } from "@/lib/accounting/money";
-import { formatDateTime } from "@/lib/utils";
+import { formatDateTime, waLink } from "@/lib/utils";
 import { useAppStore } from "@/lib/store";
 import { useToast } from "@/components/ui/Toast";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
@@ -18,11 +18,6 @@ const STATUS_STYLES: Record<ReminderDto["status"], string> = {
   failed: "bg-danger-50 text-danger-600 border-danger-100",
   skipped: "bg-danger-50 text-danger-600 border-danger-100",
 };
-
-function waLink(phone: string, message: string): string {
-  const digits = phone.replace(/[^0-9]/g, "");
-  return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
-}
 
 export default function ReminderCard({
   reminder,
@@ -100,12 +95,12 @@ export default function ReminderCard({
   }
 
   return (
-    <div className="card p-5">
+    <div className="card animate-fade-in-up p-5">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
           <input
             type="checkbox"
-            className="mt-1 h-4 w-4 rounded border-line text-brand-600 focus:ring-brand-400"
+            className="mt-1 h-4 w-4 rounded border-line text-accent-600 focus:ring-accent-400"
             checked={selected}
             disabled={!isActionable}
             onChange={onToggleSelected}

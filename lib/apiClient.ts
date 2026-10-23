@@ -100,6 +100,29 @@ export const api = {
         { method: "POST", body: JSON.stringify({ reminderIds, clientNonce }) }
       ),
   },
+  customerReplies: {
+    list: () => request<{ customerReplies: CustomerReplyDto[] }>("/api/customer-replies"),
+    edit: (id: string, message: string) =>
+      request<{ customerReply: CustomerReplyDto }>(`/api/customer-replies/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ action: "edit", message }),
+      }),
+    approve: (id: string) =>
+      request<{ customerReply: CustomerReplyDto }>(`/api/customer-replies/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ action: "approve" }),
+      }),
+    skip: (id: string) =>
+      request<{ customerReply: CustomerReplyDto }>(`/api/customer-replies/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ action: "skip" }),
+      }),
+    send: (id: string, clientNonce: string) =>
+      request<{ reply: CustomerReplyDto; ok: boolean; errorDetail?: string; deduplicated: boolean }>(
+        `/api/customer-replies/${id}/send`,
+        { method: "POST", body: JSON.stringify({ clientNonce }) }
+      ),
+  },
   activity: {
     list: () => request<{ activity: ActivityDto[] }>("/api/activity"),
   },
@@ -152,6 +175,20 @@ export interface ReminderDto {
   message: string;
   amount_paise_at_draft: number;
   days_overdue_at_draft: number;
+  status: "draft" | "approved" | "sent" | "failed" | "skipped";
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CustomerReplyDto {
+  id: string;
+  business_id: string;
+  customer_id: string;
+  inbound_message_id: string;
+  inbound_text: string;
+  inbound_received_at: string;
+  draft_reply: string;
+  drafted_by: "ai" | "template";
   status: "draft" | "approved" | "sent" | "failed" | "skipped";
   created_at: string;
   updated_at: string;

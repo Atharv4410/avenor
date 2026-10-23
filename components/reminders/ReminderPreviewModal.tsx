@@ -16,8 +16,8 @@ export default function ReminderPreviewModal({
   onClose: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-ink/30 px-4">
-      <div className="card w-full max-w-sm p-6 shadow-pop">
+    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-ink/30 px-4 animate-fade-in">
+      <div className="card w-full max-w-sm animate-scale-in p-6 shadow-pop">
         <div className="flex items-start justify-between">
           <div>
             <h3 className="text-sm font-semibold text-ink">Preview reminder</h3>
@@ -25,7 +25,7 @@ export default function ReminderPreviewModal({
               {customer.shopName} &middot; {formatPaiseAsINR(amountPaise)}
             </p>
           </div>
-          <button onClick={onClose} className="text-ink-faint hover:text-ink">
+          <button onClick={onClose} className="text-ink-faint transition-colors hover:text-ink">
             <X size={18} />
           </button>
         </div>

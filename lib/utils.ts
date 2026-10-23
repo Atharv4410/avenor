@@ -28,3 +28,10 @@ export function transactionTypeLabel(type: TransactionType): string {
       return "Payment Received";
   }
 }
+
+/** Deep-links into WhatsApp with the message pre-filled, for a manual
+ * copy/paste-style send straight from the owner's own WhatsApp number. */
+export function waLink(phone: string, message: string): string {
+  const digits = phone.replace(/[^0-9]/g, "");
+  return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
+}

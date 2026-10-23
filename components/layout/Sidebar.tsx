@@ -23,7 +23,7 @@ export default function Sidebar({ mobile = false }: { mobile?: boolean }) {
     <div className="flex h-full w-64 flex-col border-r border-line bg-card">
       <div className="flex items-center justify-between px-5 py-5">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-600 text-white shadow-sm">
             <Receipt size={16} />
           </div>
           <div className="leading-tight">
@@ -65,9 +65,9 @@ export default function Sidebar({ mobile = false }: { mobile?: boolean }) {
               href={item.href}
               onClick={() => mobile && setMobileNavOpen(false)}
               className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium",
                 active
-                  ? "bg-brand-50 text-brand-700"
+                  ? "bg-accent-50 text-accent-700"
                   : "text-ink-muted hover:bg-paper hover:text-ink"
               )}
             >

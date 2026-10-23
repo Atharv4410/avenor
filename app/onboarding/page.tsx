@@ -32,9 +32,9 @@ export default function OnboardingPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-paper px-4">
-      <div className="card w-full max-w-md p-8">
+      <div className="card w-full max-w-md animate-fade-in-up p-8">
         <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-600 text-white shadow-sm">
             <Receipt size={18} />
           </div>
           <span className="text-xl font-semibold text-ink">Avenor</span>
